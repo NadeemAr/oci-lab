@@ -1,0 +1,3 @@
+- name: Show Ansible SSH user
+  debug:
+    var: ansible_user
