@@ -1,0 +1,28 @@
+---
+- name: Patch server and reboot
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Clean DNF cache
+      command: dnf clean all
+      changed_when: false
+
+    - name: Apply all available updates
+      dnf:
+        name: "*"
+        state: latest
+      register: patch_result
+
+    - name: Show patch result
+      debug:
+        var: patch_result
+
+    - name: Reboot server after patching
+      reboot:
+        reboot_timeout: 900
+
+    - name: Wait for server to come back
+      wait_for_connection:
+        timeout: 600
